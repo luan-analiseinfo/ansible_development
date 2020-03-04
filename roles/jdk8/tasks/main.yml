@@ -1,0 +1,51 @@
+  - 
+    name: "Create Directory structure"
+    command: "mkdir -p {{java_name}}"
+    become: yes
+  - 
+    name: "Download Java"
+    get_url: "url={{ jdk_tarball_url }}  dest={{ java_archive }} headers=\"Cookie:' gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie'\" validate_certs=no owner=root group=root mode=744"
+    become: yes
+  - 
+    name: "Unpack archive"
+    action: "shell tar -xzvf {{java_archive}} -C {{download_folder}}"
+    become: yes
+  - 
+    name: "Fix ownership"
+    file: "state=directory path={{java_name}} owner=root group=root recurse=yes"
+    become: yes
+  - 
+    name: "Make Java available for system by updating alternatives"
+    command: "update-alternatives --install {{ java_name }} java {{ java_name }}/bin/java 0"
+    become: yes
+  - 
+    name: "Set systemwide oracle env file under /etc/profile.d/"
+    set_fact: "remote_file_path={{profile_path}}/oracle_jdk.sh"
+    become: yes
+  - 
+    name: "Create a new file {{profile_path}}/oracle_jdk.sh"
+    file: "path={{remote_file_path}} state=touch"
+    become: yes
+  - 
+    register: file_path
+    stat: "path={{remote_file_path}}"
+    become: yes
+  - 
+    copy: 
+      content: |
+          #!/bin/bash
+          export JDK_HOME={{ java_name }}
+          export JAVA_HOME={{ java_name }}
+          export JRE_HOME={{ java_name }}/jre
+          export PATH=$PATH:{{ java_name }}/bin:{{ java_name }}/jre/bin
+      dest: /etc/profile.d/oracle_jdk.sh
+    become: yes
+  - 
+    name: "Set executable perission"
+    file: "path={{profile_path}}/oracle_jdk.sh owner=root group=root mode=0555 state=file recurse=no"
+    become: yes
+  - 
+    name: "Source the file {{profile_path}}/oracle_jdk.sh"
+    shell:  "source /etc/profile" 
+    args: 
+      executable: "/bin/bash"

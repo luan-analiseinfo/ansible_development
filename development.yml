@@ -1,0 +1,4 @@
+--- 
+- hosts: maquinadsv
+  roles:
+    - jdk8
