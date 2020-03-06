@@ -1,0 +1,12 @@
+---
+ - name: install default packages
+   apt: "{{ item }}"
+   state: "installed"
+   with_items:
+    - aptitude
+    - vim
+    - supervisor
+    - python-dev
+    - htop
+    - screen
+  
