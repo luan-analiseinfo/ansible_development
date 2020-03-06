@@ -1,0 +1,19 @@
+---
+ - name: Verificando se o eclipse já está instalado
+   file: 
+     path: '{{ eclipse_home_parent_directory }}'
+     state: directory
+   become: yes
+
+ - name: Downloading eclipse
+   get_url:
+     url: '{{ eclipse_download_url }}' 
+     dest: '{{ eclipse_home_parent_directory }}' 
+   become: yes
+ 
+ - name: Desempacotando eclipse
+   unarchive:
+     src: '{{ eclipse_home_parent_directory }}/{{ eclipse_file_name }}' 
+     dest: '/opt/eclipse'
+     copy: no
+   become: yes

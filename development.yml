@@ -1,6 +1,9 @@
 --- 
 - hosts: maquinadsv
   roles:
-    - common
-    - jdk8
-    - maven
+    - eclipse
+
+
+#common
+#jdk8
+#maven

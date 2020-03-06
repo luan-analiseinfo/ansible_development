@@ -1,0 +1,3 @@
+eclipse_file_name: eclipse-jee-2019-12-R-linux-gtk-x86_64.tar.gz
+eclipse_download_url: http://eclipse.c3sl.ufpr.br/technology/epp/downloads/release/2019-12/R/{{ eclipse_file_name }}
+eclipse_home_parent_directory: /opt/eclipse
